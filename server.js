@@ -110,7 +110,11 @@ app.post('/csvtojson', (req, res) => {
           reject(new Error(`Failed to get '${url}' (${response.statusCode})`));
           return;
         }
-
+            // return res.status(400).send({
+            //       status: 'failed',
+            //       message: 'Response',
+            //       statusd: response
+            // });
         fileInfo = {
           mime: response.headers['content-type'],
           size: parseInt(response.headers['content-length'], 10),
