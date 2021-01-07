@@ -59,8 +59,12 @@ app.post('/csvtojson', (req, res) => {
   }
   
   let csvlink = req.body.csv.url;
-  let filepath = '/receivedfile.csv';
+  let filepath = 'db/receivedfile.csv';
   
+  
+ await fs.createReadStream('public/profilogif.html')
+   .pipe(convert())
+   .pipe(fs.createWriteStream("assets/profilogif.gif"));
 
 //   function to download csv from url
   const download = (url, dest, cb) => {
@@ -103,7 +107,7 @@ app.post('/csvtojson', (req, res) => {
           });
         })
         .on('data', row => {
-          results.push(row)
+          results.push(row);
 //           `ROW=${JSON.stringify(row)}`
           // return res.status(200).send({
           //     status: 'success',
@@ -113,7 +117,7 @@ app.post('/csvtojson', (req, res) => {
         .on('end', rowCount => {
           return res.status(200).send({
               status: 'success',
-              message: results
+              message: rowCount
           });
         });
     
