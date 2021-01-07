@@ -143,15 +143,16 @@ app.post('/csvtojson', (req, res) => {
       request.end();
     });
 }
-  let downloadStatus = download(csvlink, filepath);
+  download(csvlink, filepath);
+  // let downloadStatus = download(csvlink, filepath);
   
-  if(downloadStatus == false) {
-    return res.status(400).send({
-          status: 'failed',
-          message: 'Error Fetching CSV File',
-          statusd: downloadStatus
-    });
-  } else {
+//   if(downloadStatus == false) {
+//     return res.status(400).send({
+//           status: 'failed',
+//           message: 'Error Fetching CSV File',
+//           statusd: downloadStatus
+//     });
+//   } else {
 
 //         return res.status(400).send({
 //           status: 'failed',
@@ -200,7 +201,7 @@ app.post('/csvtojson', (req, res) => {
 //         });
 //      });
     
-  }
+// }
 
 });
 
