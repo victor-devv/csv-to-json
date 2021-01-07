@@ -5,7 +5,6 @@
 // but feel free to use whatever libraries or frameworks you'd like through `package.json`.
 const express = require("express");
 const app = express();
-import todos from __dirname + '/db/db.js';
 
 // our default array of dreams
 const dreams = [
