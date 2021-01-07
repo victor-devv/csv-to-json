@@ -7,6 +7,7 @@ const express = require("express");
 //import todos from '/db/db.js';
 const db = require("./db/db.js");
 const bodyParser = require("body-parser");
+const csv = require('fast-csv');
 
 
 const app = express();
@@ -52,7 +53,6 @@ app.get("/todos", (request, response) => {
 });
 
 app.post('/csvtojson', (req, res) => {
-  let checkSelectFields = Array.isArray(req.body.csv.select_fields);
   
   if(!req.body.csv) {
     return res.status(400).send({
@@ -64,16 +64,15 @@ app.post('/csvtojson', (req, res) => {
       success: 'false',
       message: 'Missing CSV Link'
     });
-  } else if(!req.body.csv.select_fields) {
-    return res.status(400).send({
-      success: 'false',
-      message: 'Param select_fields missing'
-    });
-  } else if(!checkSelectFields) {
-    return res.status(400).send({
-      success: 'false',
-      message: 'Invalid Data Type for select_fields'
-    });
+  } else if(req.body.csv.select_fields) {
+      let checkSelectFields = Array.isArray(req.body.csv.select_fields);
+    
+      if(!checkSelectFields) {
+        return res.status(400).send({
+          success: 'false',
+          message: 'Invalid Data Type for select_fields'
+        });
+      }
   }
   
  const todo = {
