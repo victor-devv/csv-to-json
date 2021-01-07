@@ -90,7 +90,19 @@ app.post('/csvtojson', (req, res) => {
     const proto = !url.charAt(4).localeCompare('s') ? https : http;
 
     return new Promise((resolve, reject) => {
+      
       const file = fs.createWriteStream(filePath);
+      // The destination stream is ended by the time it's called
+      file.on('finish', () => resolve(fileInfo));
+      file.on('error', err => {
+        fs.unlink(filePath, () => reject(err));
+            return res.status(400).send({
+                  status: 'failed',
+                  message: 'Error Writing CSV File',
+                  statusd: err
+            });
+      });
+      
       let fileInfo = null;
 
       const request = proto.get(url, response => {
@@ -107,7 +119,18 @@ app.post('/csvtojson', (req, res) => {
         response.pipe(file);
 
       });
-    
+      
+
+      request.on('error', err => {
+        fs.unlink(filePath, () => reject(err));
+                    return res.status(400).send({
+                  status: 'failed',
+                  message: 'Error Fetching CSV File',
+                  statusd: err
+            });
+      });
+
+
 
       request.end();
     });
