@@ -51,20 +51,20 @@ app.post('/csvtojson', (req, res) => {
       }
   }
   
-  const cb = (err) => { 
-    if (err) 
-          return res.status(400).send({
+//   file close callback
+  const cb = (err = null) => { 
+    if (err) {
+     return res.status(400).send({
           status: 'failed',
           message: 'Error Closing CSV File.'
-    });
-    else { 
-      console.log("\n> File Closed successfully"); 
+      });
     }
   }
   
   let csvlink = req.body.csv;
   let filepath = 'receivedfile.csv';
   
+//   function to download csv from url
   const download = (url, dest, cb) => {
     const file = fs.createWriteStream(dest);
     
