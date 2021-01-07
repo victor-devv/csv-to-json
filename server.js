@@ -59,7 +59,7 @@ app.post('/csvtojson', (req, res) => {
   }
   
   let csvlink = req.body.csv.url;
-  let filepath = 'public/receivedfile.csv';
+  let filepath = '/receivedfile.csv';
   
   
  // await fs.createReadStream('public/profilogif.html')
@@ -103,36 +103,11 @@ app.post('/csvtojson', (req, res) => {
           mime: response.headers['content-type'],
           size: parseInt(response.headers['content-length'], 10),
         };
-                    return res.status(400).send({
-                  status: 'failed',
-                  message: 'Error Fetching CSV File',
-                  statusd: fileInfo
-            });
+
         response.pipe(file);
 
       });
-      
-
-      // The destination stream is ended by the time it's called
-      file.on('finish', () => resolve(fileInfo));
-
-      request.on('error', err => {
-        fs.unlink(filePath, () => reject(err));
-                    return res.status(400).send({
-                  status: 'failed',
-                  message: 'Error Fetching CSV File',
-                  statusd: err
-            });
-      });
-
-      file.on('error', err => {
-        fs.unlink(filePath, () => reject(err));
-                          return res.status(400).send({
-                  status: 'failed',
-                  message: 'Error Fetching CSV File',
-                  statusd: err
-            });
-      });
+    
 
       request.end();
     });
