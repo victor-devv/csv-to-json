@@ -6,4 +6,5 @@ const todos =  [
     }
 ];
 
-export default todos;
+//export default todos;
+module.exports = todos;
