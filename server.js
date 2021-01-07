@@ -70,7 +70,7 @@ app.post('/csvtojson', (req, res) => {
       });
       return true;
     }).on('error', (err) => {
-      fs.unlink(dest); // Delete the file async
+      // fs.unlink(dest); // Delete the file async
       
       if (cb) cb(err.message);
       var errorMsg = err.message
@@ -112,7 +112,7 @@ app.post('/csvtojson', (req, res) => {
           //     message: 'Parse Ended'
           // });
         });
-    stream.write(csvlink);
+    
     stream.end();
     
   }
