@@ -23,10 +23,7 @@ app.get("/", (request, response) => {
 
 
 app.post('/csvtojson', (req, res) => {
-  // return res.status(200).send({
-  //     status: 'failed',
-  //     message: req.body.csv
-  //   });
+  
   if(!req.body.csv) {
     return res.status(400).send({
       status: 'failed',
@@ -75,6 +72,7 @@ app.post('/csvtojson', (req, res) => {
       fs.unlink(dest); // Delete the file async
       
       if (cb) cb(err.message);
+      var errorMsg = err.message
       return false;
     });
   };
@@ -84,7 +82,8 @@ app.post('/csvtojson', (req, res) => {
   if(!downloadStatus) {
     return res.status(400).send({
           status: 'failed',
-          message: 'Error Fetching CSV File.'
+          message: `Error Fetching CSV File`,
+          status: down
     });
   } else {
     
