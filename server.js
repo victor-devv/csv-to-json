@@ -95,6 +95,11 @@ app.post('/csvtojson', (req, res) => {
       const request = proto.get(url, response => {
         if (response.statusCode !== 200) {
           reject(new Error(`Failed to get '${url}' (${response.statusCode})`));
+            return res.status(400).send({
+                  status: 'failed',
+                  message: 'Error Fetching CSV File',
+                  statusd: downloadStatus
+            });
           return;
         }
 
@@ -104,7 +109,25 @@ app.post('/csvtojson', (req, res) => {
         };
 
         response.pipe(file);
+
       });
+      
+      fs.createReadStream(filepath)
+      .pipe(parser())
+      .on('data', (data) => {
+        results.push(data)
+      })
+      .on('end', () => {
+        
+        // [
+        //   { NAME: 'Daffy Duck', AGE: '24' },
+        //   { NAME: 'Bugs Bunny', AGE: '22' }
+        // ]
+        return res.status(200).send({
+            status: 'success',
+            message: results
+        });
+     });
 
       // The destination stream is ended by the time it's called
       file.on('finish', () => resolve(fileInfo));
@@ -129,6 +152,7 @@ app.post('/csvtojson', (req, res) => {
           statusd: downloadStatus
     });
   } else {
+
 //         return res.status(400).send({
 //           status: 'failed',
 //           message: 'CSV File Fetched',
@@ -159,22 +183,22 @@ app.post('/csvtojson', (req, res) => {
 //     stream.end();
 
     
-      fs.createReadStream(filepath)
-      .pipe(parser())
-      .on('data', (data) => {
-        results.push(data)
-      })
-      .on('end', () => {
+//       fs.createReadStream(filepath)
+//       .pipe(parser())
+//       .on('data', (data) => {
+//         results.push(data)
+//       })
+//       .on('end', () => {
         
-        // [
-        //   { NAME: 'Daffy Duck', AGE: '24' },
-        //   { NAME: 'Bugs Bunny', AGE: '22' }
-        // ]
-        return res.status(200).send({
-            status: 'success',
-            message: results
-        });
-     });
+//         // [
+//         //   { NAME: 'Daffy Duck', AGE: '24' },
+//         //   { NAME: 'Bugs Bunny', AGE: '22' }
+//         // ]
+//         return res.status(200).send({
+//             status: 'success',
+//             message: results
+//         });
+//      });
     
   }
 
