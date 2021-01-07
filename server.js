@@ -52,6 +52,8 @@ app.get("/todos", (request, response) => {
 });
 
 app.post('/csvtojson', (req, res) => {
+  let checkSelectFields = Array.isArray(req.body.csv.select_fields);
+  
   if(!req.body.csv) {
     return res.status(400).send({
       success: 'false',
@@ -65,14 +67,15 @@ app.post('/csvtojson', (req, res) => {
   } else if(!req.body.csv.select_fields) {
     return res.status(400).send({
       success: 'false',
-      message: 'Param 'select_fields' missing'
+      message: 'Param select_fields missing'
     });
-  } else if(typeof req.body.csv.select_fields !== array) {
+  } else if(!checkSelectFields) {
     return res.status(400).send({
       success: 'false',
-      message: 'Param 'select_fields' missing'
+      message: 'Invalid Data Type for select_fields'
     });
   }
+  
  const todo = {
    id: db.length + 1,
    title: req.body.title,
