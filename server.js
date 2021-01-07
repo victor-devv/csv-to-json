@@ -91,6 +91,11 @@ app.post('/csvtojson', (req, res) => {
     });
   } else {
     
+    csv.parseFile('my.csv')
+        .on('error', error => console.error(error))
+        .on('data', row => console.log(`ROW=${JSON.stringify(row)}`))
+        .on('end', rowCount => console.log(`Parsed ${rowCount} rows`));
+    
   }
   
 });
