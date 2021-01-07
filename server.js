@@ -55,7 +55,7 @@ app.post('/csvtojson', (req, res) => {
     }
   }
   
-  let csvlink = req.body.csv;
+  let csvlink = req.body.csv.url;
   let filepath = 'receivedfile.csv';
   
 //   function to download csv from url
@@ -79,11 +79,11 @@ app.post('/csvtojson', (req, res) => {
   
   let downloadStatus = download(csvlink, filepath, cb);
   
-  if(!downloadStatus) {
+  if(downloadStatus == false) {
     return res.status(400).send({
           status: 'failed',
-          message: `Error Fetching CSV File`,
-          status: down
+          message: 'Error Fetching CSV File',
+          statusd: downloadStatus
     });
   } else {
     
