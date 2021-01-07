@@ -58,6 +58,17 @@ app.post('/csvtojson', (req, res) => {
       }
   }
   
+  const cb = (err) => { 
+    if (err) 
+      console.error('Failed to close file', err); 
+    else { 
+      console.log("\n> File Closed successfully"); 
+    }
+  }
+  
+  let csvlink = req.body.csv;
+  let filepath = 'receivedfile.csv';
+  
   const download = (url, dest, cb) => {
     const file = fs.createWriteStream(dest);
     
@@ -73,6 +84,8 @@ app.post('/csvtojson', (req, res) => {
       return false;
     });
   };
+  
+  download(csvlink, filepath, cb);
   
   
 });
