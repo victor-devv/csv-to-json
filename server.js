@@ -6,9 +6,15 @@
 const express = require("express");
 //import todos from '/db/db.js';
 const db = require("./db/db.js");
+const bodyParser = require("body-parser");
 
 
 const app = express();
+
+// Parse incoming requests data
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+
 // our default array of dreams
 const dreams = [
   "Find and count some sheep",
@@ -43,6 +49,41 @@ app.get('/api/v1/todos', (request, response) => {
 app.get("/todos", (request, response) => {
   // express helps us take JS objects and send them as JSON
   response.json(db);
+});
+
+app.post('/csvtojson', (req, res) => {
+  if(!req.body.csv) {
+    return res.status(400).send({
+      success: 'false',
+      message: 'Invalid Payload Structure'
+    });
+  } else if(!req.body.csv.url) {
+    return res.status(400).send({
+      success: 'false',
+      message: 'Missing CSV Link'
+    });
+  } else if(!req.body.csv.select_fields) {
+    return res.status(400).send({
+      success: 'false',
+      message: 'Param 'select_fields' missing'
+    });
+  } else if(typeof req.body.csv.select_fields !== array) {
+    return res.status(400).send({
+      success: 'false',
+      message: 'Param 'select_fields' missing'
+    });
+  }
+ const todo = {
+   id: db.length + 1,
+   title: req.body.title,
+   description: req.body.description
+ }
+ db.push(todo);
+ return res.status(201).send({
+   success: 'true',
+   message: 'todo added successfully',
+   todo
+ })
 });
 
 // listen for requests :)
