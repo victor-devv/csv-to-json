@@ -32,12 +32,17 @@ app.get("/dreams", (request, response) => {
 });
 
 // get all todos
-app.get('/api/v1/todos', (req, res) => {
-  res.status(200).send({
+app.get('/api/v1/todos', (request, response) => {
+  response.status(200).send({
     success: 'true',
     message: 'todos retrieved successfully',
     todos: db
   })
+});
+
+app.get("/todos", (request, response) => {
+  // express helps us take JS objects and send them as JSON
+  response.json(db);
 });
 
 // listen for requests :)
