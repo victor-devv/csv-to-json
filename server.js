@@ -23,7 +23,10 @@ app.get("/", (request, response) => {
 
 
 app.post('/csvtojson', (req, res) => {
-  
+  // return res.status(200).send({
+  //     status: 'failed',
+  //     message: req.body.csv
+  //   });
   if(!req.body.csv) {
     return res.status(400).send({
       status: 'failed',
@@ -94,7 +97,7 @@ app.post('/csvtojson', (req, res) => {
         })
         .on('data', row => {
           return res.status(200).send({
-              status: 'failed',
+              status: 'success',
               message: `ROW=${JSON.stringify(row)}`
           });
         })
