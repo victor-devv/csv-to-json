@@ -21,12 +21,6 @@ app.get("/", (request, response) => {
   response.sendFile(__dirname + "/views/index.html");
 });
 
-// send the default array of dreams to the webpage
-app.get("/dreams", (request, response) => {
-  // express helps us take JS objects and send them as JSON
-  response.json(dreams);
-});
-
 
 app.post('/csvtojson', (req, res) => {
   
@@ -91,13 +85,23 @@ app.post('/csvtojson', (req, res) => {
     });
   } else {
     
-    csv.parseFile('my.csv')
-        .on('error', error => console.error(error))
-        .on('data', row => console.log(`ROW=${JSON.stringify(row)}`))
+    const csvStream = csv.parseFile('my.csv')
+        .on('error', error => {
+          return res.status(400).send({
+              status: 'failed',
+              message: error
+          });
+        })
+        .on('data', row => {
+          return res.status(200).send({
+              status: 'failed',
+              message: `ROW=${JSON.stringify(row)}`
+          });
+        })
         .on('end', rowCount => console.log(`Parsed ${rowCount} rows`));
     
   }
-  
+
 });
 
 // listen for requests :)
