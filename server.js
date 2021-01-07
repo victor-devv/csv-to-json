@@ -57,7 +57,7 @@ app.post('/csvtojson', (req, res) => {
   }
   
   let csvlink = req.body.csv.url;
-  let filepath = 'receivedfile.csv';
+  let filepath = '/receivedfile.csv';
   
 //   function to download csv from url
   const download = (url, dest, cb) => {
@@ -92,7 +92,7 @@ app.post('/csvtojson', (req, res) => {
 //           message: 'CSV File Fetched',
 
 //     });
-    const csvStream = csv.parseFile(csvlink)
+    const stream = csv.parseFile(csvlink, { headers:true })
         .on('error', error => {
           return res.status(400).send({
               status: 'failed',
@@ -100,19 +100,20 @@ app.post('/csvtojson', (req, res) => {
           });
         })
         .on('data', row => {
+//           `ROW=${JSON.stringify(row)}`
           return res.status(200).send({
               status: 'success',
-              message: 'ROW= ' + JSON.stringify(row)
+              message: row
           });
         })
         .on('end', rowCount => {
           // return res.status(200).send({
           //     status: 'success',
-          //     message: 'ROW= ' + JSON.stringify(row)
+          //     message: 'Parse Ended'
           // });
-          // console.log(`Parsed ${rowCount} rows`)
-          console.log('yes');
         });
+    stream.write(csvlink);
+    stream.end();
     
   }
 
