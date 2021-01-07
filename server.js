@@ -1,5 +1,6 @@
 // server.js
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const express = require("express");
 
@@ -62,7 +63,7 @@ app.post('/csvtojson', (req, res) => {
   const download = (url, dest, cb) => {
     const file = fs.createWriteStream(dest);
     
-    const request = http.get(url, function(response) {
+    const request = https.get(url, function(response) {
       response.pipe(file);
       file.on('finish', function() {
         file.close(cb);
