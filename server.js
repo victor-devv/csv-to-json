@@ -12,13 +12,6 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// our default array of dreams
-const dreams = [
-  "Find and count some sheep",
-  "Climb a really tall mountain",
-  "Wash the dishes"
-];
-
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
 app.use(express.static("public"));
@@ -39,12 +32,12 @@ app.post('/csvtojson', (req, res) => {
   
   if(!req.body.csv) {
     return res.status(400).send({
-      success: 'false',
+      status: 'failed',
       message: 'Invalid Payload Structure'
     });
   } else if(!req.body.csv.url) {
     return res.status(400).send({
-      success: 'false',
+      status: 'failed',
       message: 'Missing CSV Link'
     });
   } else if(req.body.csv.select_fields) {
@@ -52,7 +45,7 @@ app.post('/csvtojson', (req, res) => {
     
       if(!checkSelectFields) {
         return res.status(400).send({
-          success: 'false',
+          status: 'failed',
           message: 'Invalid Data Type for select_fields'
         });
       }
@@ -60,7 +53,10 @@ app.post('/csvtojson', (req, res) => {
   
   const cb = (err) => { 
     if (err) 
-      console.error('Failed to close file', err); 
+          return res.status(400).send({
+          status: 'failed',
+          message: 'Error Closing CSV File.'
+    });
     else { 
       console.log("\n> File Closed successfully"); 
     }
@@ -75,18 +71,27 @@ app.post('/csvtojson', (req, res) => {
     const request = http.get(url, function(response) {
       response.pipe(file);
       file.on('finish', function() {
-        file.close(cb);  // close() is async, call cb after close completes.
+        file.close(cb);
       });
       return true;
-    }).on('error', function(err) { // Handle errors
-      fs.unlink(dest); // Delete the file async. (But we don't check the result)
+    }).on('error', function(err) {
+      fs.unlink(dest); // Delete the file async
+      
       if (cb) cb(err.message);
       return false;
     });
   };
   
-  download(csvlink, filepath, cb);
+  let downloadStatus = download(csvlink, filepath, cb);
   
+  if(!downloadStatus) {
+    return res.status(400).send({
+          status: 'failed',
+          message: 'Error Fetching CSV File.'
+    });
+  } else {
+    
+  }
   
 });
 
