@@ -1,17 +1,10 @@
 // server.js
-// where your node app starts
-
-// we've started you off with Express (https://expressjs.com/)
-// but feel free to use whatever libraries or frameworks you'd like through `package.json`.
-const express = require("express");
+const http = require('http');
 const fs = require('fs');
-
+const express = require("express");
 
 const bodyParser = require("body-parser");
 const csv = require('fast-csv');
-const http = require('http');
-
-
 
 const app = express();
 
@@ -41,19 +34,6 @@ app.get("/dreams", (request, response) => {
   response.json(dreams);
 });
 
-// get all todos
-app.get('/api/v1/todos', (request, response) => {
-  response.status(200).send({
-    success: 'true',
-    message: 'todos retrieved successfully',
-    todos: db
-  })
-});
-
-app.get("/todos", (request, response) => {
-  // express helps us take JS objects and send them as JSON
-  response.json(db);
-});
 
 app.post('/csvtojson', (req, res) => {
   
@@ -78,19 +58,23 @@ app.post('/csvtojson', (req, res) => {
       }
   }
   
-
-var download = function(url, dest, cb) {
-  var file = fs.createWriteStream(dest);
-  var request = http.get(url, function(response) {
-    response.pipe(file);
-    file.on('finish', function() {
-      file.close(cb);  // close() is async, call cb after close completes.
+  const download = (url, dest, cb) => {
+    const file = fs.createWriteStream(dest);
+    
+    const request = http.get(url, function(response) {
+      response.pipe(file);
+      file.on('finish', function() {
+        file.close(cb);  // close() is async, call cb after close completes.
+      });
+      return true;
+    }).on('error', function(err) { // Handle errors
+      fs.unlink(dest); // Delete the file async. (But we don't check the result)
+      if (cb) cb(err.message);
+      return false;
     });
-  }).on('error', function(err) { // Handle errors
-    fs.unlink(dest); // Delete the file async. (But we don't check the result)
-    if (cb) cb(err.message);
-  });
-};
+  };
+  
+  
 });
 
 // listen for requests :)
