@@ -6,9 +6,11 @@ const express = require("express");
 
 const bodyParser = require("body-parser");
 const csv = require('fast-csv');
+const parser = require('csv-parser');
 
 const app = express();
 
+const results = ['a', 'b'];
 // Parse incoming requests data
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -59,6 +61,7 @@ app.post('/csvtojson', (req, res) => {
   let csvlink = req.body.csv.url;
   let filepath = '/receivedfile.csv';
   
+
 //   function to download csv from url
   const download = (url, dest, cb) => {
     const file = fs.createWriteStream(dest);
@@ -92,7 +95,7 @@ app.post('/csvtojson', (req, res) => {
 //           message: 'CSV File Fetched',
 
 //     });
-    const stream = csv.parseFile(csvlink, { headers:true })
+    const stream = csv.parseFile(filepath, { headers:true })
         .on('error', error => {
           return res.status(400).send({
               status: 'failed',
@@ -100,20 +103,39 @@ app.post('/csvtojson', (req, res) => {
           });
         })
         .on('data', row => {
+          results.push(row)
 //           `ROW=${JSON.stringify(row)}`
-          return res.status(200).send({
-              status: 'success',
-              message: row
-          });
-        })
-        .on('end', rowCount => {
           // return res.status(200).send({
           //     status: 'success',
-          //     message: 'Parse Ended'
+          //     message: row
           // });
+        })
+        .on('end', rowCount => {
+          return res.status(200).send({
+              status: 'success',
+              message: results
+          });
         });
     
     stream.end();
+
+    
+//       fs.createReadStream(filepath)
+//       .pipe(csv())
+//       .on('data', (data) => {
+//         results.push(data)
+//       })
+//       .on('end', () => {
+//         console.log(results);
+//         // [
+//         //   { NAME: 'Daffy Duck', AGE: '24' },
+//         //   { NAME: 'Bugs Bunny', AGE: '22' }
+//         // ]
+//         return res.status(200).send({
+//             status: 'success',
+//             message: results
+//         });
+//      });
     
   }
 
