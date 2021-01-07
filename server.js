@@ -92,7 +92,7 @@ app.post('/csvtojson', (req, res) => {
 //           message: 'CSV File Fetched',
 
 //     });
-    const csvStream = csv.parseFile('my.csv')
+    const csvStream = csv.parseFile(csvlink)
         .on('error', error => {
           return res.status(400).send({
               status: 'failed',
@@ -102,10 +102,17 @@ app.post('/csvtojson', (req, res) => {
         .on('data', row => {
           return res.status(200).send({
               status: 'success',
-              message: `ROW=${JSON.stringify(row)}`
+              message: 'ROW= ' + JSON.stringify(row)
           });
         })
-        .on('end', rowCount => console.log(`Parsed ${rowCount} rows`));
+        .on('end', rowCount => {
+          // return res.status(200).send({
+          //     status: 'success',
+          //     message: 'ROW= ' + JSON.stringify(row)
+          // });
+          // console.log(`Parsed ${rowCount} rows`)
+          console.log('yes');
+        });
     
   }
 
