@@ -4,8 +4,10 @@
 // we've started you off with Express (https://expressjs.com/)
 // but feel free to use whatever libraries or frameworks you'd like through `package.json`.
 const express = require("express");
-const app = express();
+const db = require("./db/db.js");
+//import db from './db/db';
 
+const app = express();
 // our default array of dreams
 const dreams = [
   "Find and count some sheep",
@@ -26,6 +28,15 @@ app.get("/", (request, response) => {
 app.get("/dreams", (request, response) => {
   // express helps us take JS objects and send them as JSON
   response.json(dreams);
+});
+
+// get all todos
+app.get('/api/v1/todos', (req, res) => {
+  res.status(200).send({
+    success: 'true',
+    message: 'todos retrieved successfully',
+    todos: db
+  })
 });
 
 // listen for requests :)

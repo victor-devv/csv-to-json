@@ -1,0 +1,365 @@
+{
+  "{\"filename\":\"/app/server.js\",\"env\":{},\"retainLines\":false,\"highlightCode\":true,\"suppressDeprecationMessages\":false,\"presets\":[],\"plugins\":[[[],{\"loose\":false,\"spec\":false}],[[],null],[[],null],[[],{\"spec\":false}],[[],null],[[],{\"loose\":false}],[[],null],[[],null],[[],null],[[],{\"loose\":false}],[[],{\"loose\":false}],[[],null],[[],null],[[],null],[[],{\"loose\":false}],[[],null],[[],{\"loose\":false}],[[],null],[[],null],[[],{\"loose\":false}],[[],{\"async\":false,\"asyncGenerators\":false}]],\"ignore\":[],\"code\":true,\"metadata\":true,\"ast\":true,\"comments\":true,\"compact\":\"auto\",\"minified\":false,\"sourceRoot\":\"/app\",\"babelrc\":true,\"sourceType\":\"module\",\"moduleIds\":false,\"passPerPreset\":false,\"parserOpts\":false,\"generatorOpts\":false}:6.26.3": {
+    "metadata": {
+      "usedHelpers": [],
+      "marked": [],
+      "modules": {
+        "imports": [],
+        "exports": {
+          "exported": [],
+          "specifiers": []
+        }
+      }
+    },
+    "options": {
+      "filename": "/app/server.js",
+      "filenameRelative": "/app/server.js",
+      "env": {},
+      "retainLines": false,
+      "highlightCode": true,
+      "suppressDeprecationMessages": false,
+      "presets": [],
+      "plugins": [
+        [
+          [],
+          {
+            "loose": false,
+            "spec": false
+          }
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          {
+            "spec": false
+          }
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          {
+            "loose": false
+          }
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          {
+            "loose": false
+          }
+        ],
+        [
+          [],
+          {
+            "loose": false
+          }
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          {
+            "loose": false
+          }
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          {
+            "loose": false
+          }
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          {
+            "loose": false
+          }
+        ],
+        [
+          [],
+          {
+            "async": false,
+            "asyncGenerators": false
+          }
+        ]
+      ],
+      "ignore": [],
+      "code": true,
+      "metadata": true,
+      "ast": false,
+      "comments": true,
+      "compact": "auto",
+      "minified": false,
+      "sourceMaps": "both",
+      "sourceMapTarget": "server.js",
+      "sourceFileName": "server.js",
+      "sourceRoot": "/app",
+      "babelrc": false,
+      "sourceType": "module",
+      "moduleRoot": "/app",
+      "moduleIds": false,
+      "passPerPreset": false,
+      "parserOpts": false,
+      "generatorOpts": false,
+      "basename": "server"
+    },
+    "ignored": false,
+    "code": "\"use strict\";\n\n// server.js\n// where your node app starts\n\n// we've started you off with Express (https://expressjs.com/)\n// but feel free to use whatever libraries or frameworks you'd like through `package.json`.\nvar express = require(\"express\");\n//const db = require('./db/db.js');\n//import db from './db/db';\n\nvar app = express();\n// our default array of dreams\nvar dreams = [\"Find and count some sheep\", \"Climb a really tall mountain\", \"Wash the dishes\"];\n\n// make all the files in 'public' available\n// https://expressjs.com/en/starter/static-files.html\napp.use(express.static(\"public\"));\n\n// https://expressjs.com/en/starter/basic-routing.html\napp.get(\"/\", function (request, response) {\n  response.sendFile(__dirname + \"/views/index.html\");\n});\n\n// send the default array of dreams to the webpage\napp.get(\"/dreams\", function (request, response) {\n  // express helps us take JS objects and send them as JSON\n  response.json(dreams);\n});\n\n// get all todos\napp.get('/api/v1/todos', function (req, res) {\n  res.status(200).send({\n    success: 'true',\n    message: 'todos retrieved successfully',\n    todos: db\n  });\n});\n\n// listen for requests :)\nvar listener = app.listen(process.env.PORT, function () {\n  console.log(\"Your app is listening on port \" + listener.address().port);\n});\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbInNlcnZlci5qcyJdLCJuYW1lcyI6WyJleHByZXNzIiwicmVxdWlyZSIsImFwcCIsImRyZWFtcyIsInVzZSIsInN0YXRpYyIsImdldCIsInJlcXVlc3QiLCJyZXNwb25zZSIsInNlbmRGaWxlIiwiX19kaXJuYW1lIiwianNvbiIsInJlcSIsInJlcyIsInN0YXR1cyIsInNlbmQiLCJzdWNjZXNzIiwibWVzc2FnZSIsInRvZG9zIiwiZGIiLCJsaXN0ZW5lciIsImxpc3RlbiIsInByb2Nlc3MiLCJlbnYiLCJQT1JUIiwiY29uc29sZSIsImxvZyIsImFkZHJlc3MiLCJwb3J0Il0sIm1hcHBpbmdzIjoiOztBQUFBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBLElBQU1BLFVBQVVDLFFBQVEsU0FBUixDQUFoQjtBQUNBO0FBQ0E7O0FBRUEsSUFBTUMsTUFBTUYsU0FBWjtBQUNBO0FBQ0EsSUFBTUcsU0FBUyxDQUNiLDJCQURhLEVBRWIsOEJBRmEsRUFHYixpQkFIYSxDQUFmOztBQU1BO0FBQ0E7QUFDQUQsSUFBSUUsR0FBSixDQUFRSixRQUFRSyxNQUFSLENBQWUsUUFBZixDQUFSOztBQUVBO0FBQ0FILElBQUlJLEdBQUosQ0FBUSxHQUFSLEVBQWEsVUFBQ0MsT0FBRCxFQUFVQyxRQUFWLEVBQXVCO0FBQ2xDQSxXQUFTQyxRQUFULENBQWtCQyxZQUFZLG1CQUE5QjtBQUNELENBRkQ7O0FBSUE7QUFDQVIsSUFBSUksR0FBSixDQUFRLFNBQVIsRUFBbUIsVUFBQ0MsT0FBRCxFQUFVQyxRQUFWLEVBQXVCO0FBQ3hDO0FBQ0FBLFdBQVNHLElBQVQsQ0FBY1IsTUFBZDtBQUNELENBSEQ7O0FBS0E7QUFDQUQsSUFBSUksR0FBSixDQUFRLGVBQVIsRUFBeUIsVUFBQ00sR0FBRCxFQUFNQyxHQUFOLEVBQWM7QUFDckNBLE1BQUlDLE1BQUosQ0FBVyxHQUFYLEVBQWdCQyxJQUFoQixDQUFxQjtBQUNuQkMsYUFBUyxNQURVO0FBRW5CQyxhQUFTLDhCQUZVO0FBR25CQyxXQUFPQztBQUhZLEdBQXJCO0FBS0QsQ0FORDs7QUFRQTtBQUNBLElBQU1DLFdBQVdsQixJQUFJbUIsTUFBSixDQUFXQyxRQUFRQyxHQUFSLENBQVlDLElBQXZCLEVBQTZCLFlBQU07QUFDbERDLFVBQVFDLEdBQVIsQ0FBWSxtQ0FBbUNOLFNBQVNPLE9BQVQsR0FBbUJDLElBQWxFO0FBQ0QsQ0FGZ0IsQ0FBakIiLCJmaWxlIjoic2VydmVyLmpzIiwic291cmNlUm9vdCI6Ii9hcHAiLCJzb3VyY2VzQ29udGVudCI6WyIvLyBzZXJ2ZXIuanNcbi8vIHdoZXJlIHlvdXIgbm9kZSBhcHAgc3RhcnRzXG5cbi8vIHdlJ3ZlIHN0YXJ0ZWQgeW91IG9mZiB3aXRoIEV4cHJlc3MgKGh0dHBzOi8vZXhwcmVzc2pzLmNvbS8pXG4vLyBidXQgZmVlbCBmcmVlIHRvIHVzZSB3aGF0ZXZlciBsaWJyYXJpZXMgb3IgZnJhbWV3b3JrcyB5b3UnZCBsaWtlIHRocm91Z2ggYHBhY2thZ2UuanNvbmAuXG5jb25zdCBleHByZXNzID0gcmVxdWlyZShcImV4cHJlc3NcIik7XG4vL2NvbnN0IGRiID0gcmVxdWlyZSgnLi9kYi9kYi5qcycpO1xuLy9pbXBvcnQgZGIgZnJvbSAnLi9kYi9kYic7XG5cbmNvbnN0IGFwcCA9IGV4cHJlc3MoKTtcbi8vIG91ciBkZWZhdWx0IGFycmF5IG9mIGRyZWFtc1xuY29uc3QgZHJlYW1zID0gW1xuICBcIkZpbmQgYW5kIGNvdW50IHNvbWUgc2hlZXBcIixcbiAgXCJDbGltYiBhIHJlYWxseSB0YWxsIG1vdW50YWluXCIsXG4gIFwiV2FzaCB0aGUgZGlzaGVzXCJcbl07XG5cbi8vIG1ha2UgYWxsIHRoZSBmaWxlcyBpbiAncHVibGljJyBhdmFpbGFibGVcbi8vIGh0dHBzOi8vZXhwcmVzc2pzLmNvbS9lbi9zdGFydGVyL3N0YXRpYy1maWxlcy5odG1sXG5hcHAudXNlKGV4cHJlc3Muc3RhdGljKFwicHVibGljXCIpKTtcblxuLy8gaHR0cHM6Ly9leHByZXNzanMuY29tL2VuL3N0YXJ0ZXIvYmFzaWMtcm91dGluZy5odG1sXG5hcHAuZ2V0KFwiL1wiLCAocmVxdWVzdCwgcmVzcG9uc2UpID0+IHtcbiAgcmVzcG9uc2Uuc2VuZEZpbGUoX19kaXJuYW1lICsgXCIvdmlld3MvaW5kZXguaHRtbFwiKTtcbn0pO1xuXG4vLyBzZW5kIHRoZSBkZWZhdWx0IGFycmF5IG9mIGRyZWFtcyB0byB0aGUgd2VicGFnZVxuYXBwLmdldChcIi9kcmVhbXNcIiwgKHJlcXVlc3QsIHJlc3BvbnNlKSA9PiB7XG4gIC8vIGV4cHJlc3MgaGVscHMgdXMgdGFrZSBKUyBvYmplY3RzIGFuZCBzZW5kIHRoZW0gYXMgSlNPTlxuICByZXNwb25zZS5qc29uKGRyZWFtcyk7XG59KTtcblxuLy8gZ2V0IGFsbCB0b2Rvc1xuYXBwLmdldCgnL2FwaS92MS90b2RvcycsIChyZXEsIHJlcykgPT4ge1xuICByZXMuc3RhdHVzKDIwMCkuc2VuZCh7XG4gICAgc3VjY2VzczogJ3RydWUnLFxuICAgIG1lc3NhZ2U6ICd0b2RvcyByZXRyaWV2ZWQgc3VjY2Vzc2Z1bGx5JyxcbiAgICB0b2RvczogZGJcbiAgfSlcbn0pO1xuXG4vLyBsaXN0ZW4gZm9yIHJlcXVlc3RzIDopXG5jb25zdCBsaXN0ZW5lciA9IGFwcC5saXN0ZW4ocHJvY2Vzcy5lbnYuUE9SVCwgKCkgPT4ge1xuICBjb25zb2xlLmxvZyhcIllvdXIgYXBwIGlzIGxpc3RlbmluZyBvbiBwb3J0IFwiICsgbGlzdGVuZXIuYWRkcmVzcygpLnBvcnQpO1xufSk7XG4iXX0=",
+    "ast": null,
+    "map": {
+      "version": 3,
+      "sources": [
+        "server.js"
+      ],
+      "names": [
+        "express",
+        "require",
+        "app",
+        "dreams",
+        "use",
+        "static",
+        "get",
+        "request",
+        "response",
+        "sendFile",
+        "__dirname",
+        "json",
+        "req",
+        "res",
+        "status",
+        "send",
+        "success",
+        "message",
+        "todos",
+        "db",
+        "listener",
+        "listen",
+        "process",
+        "env",
+        "PORT",
+        "console",
+        "log",
+        "address",
+        "port"
+      ],
+      "mappings": ";;AAAA;AACA;;AAEA;AACA;AACA,IAAMA,UAAUC,QAAQ,SAAR,CAAhB;AACA;AACA;;AAEA,IAAMC,MAAMF,SAAZ;AACA;AACA,IAAMG,SAAS,CACb,2BADa,EAEb,8BAFa,EAGb,iBAHa,CAAf;;AAMA;AACA;AACAD,IAAIE,GAAJ,CAAQJ,QAAQK,MAAR,CAAe,QAAf,CAAR;;AAEA;AACAH,IAAII,GAAJ,CAAQ,GAAR,EAAa,UAACC,OAAD,EAAUC,QAAV,EAAuB;AAClCA,WAASC,QAAT,CAAkBC,YAAY,mBAA9B;AACD,CAFD;;AAIA;AACAR,IAAII,GAAJ,CAAQ,SAAR,EAAmB,UAACC,OAAD,EAAUC,QAAV,EAAuB;AACxC;AACAA,WAASG,IAAT,CAAcR,MAAd;AACD,CAHD;;AAKA;AACAD,IAAII,GAAJ,CAAQ,eAAR,EAAyB,UAACM,GAAD,EAAMC,GAAN,EAAc;AACrCA,MAAIC,MAAJ,CAAW,GAAX,EAAgBC,IAAhB,CAAqB;AACnBC,aAAS,MADU;AAEnBC,aAAS,8BAFU;AAGnBC,WAAOC;AAHY,GAArB;AAKD,CAND;;AAQA;AACA,IAAMC,WAAWlB,IAAImB,MAAJ,CAAWC,QAAQC,GAAR,CAAYC,IAAvB,EAA6B,YAAM;AAClDC,UAAQC,GAAR,CAAY,mCAAmCN,SAASO,OAAT,GAAmBC,IAAlE;AACD,CAFgB,CAAjB",
+      "file": "server.js",
+      "sourceRoot": "/app",
+      "sourcesContent": [
+        "// server.js\n// where your node app starts\n\n// we've started you off with Express (https://expressjs.com/)\n// but feel free to use whatever libraries or frameworks you'd like through `package.json`.\nconst express = require(\"express\");\n//const db = require('./db/db.js');\n//import db from './db/db';\n\nconst app = express();\n// our default array of dreams\nconst dreams = [\n  \"Find and count some sheep\",\n  \"Climb a really tall mountain\",\n  \"Wash the dishes\"\n];\n\n// make all the files in 'public' available\n// https://expressjs.com/en/starter/static-files.html\napp.use(express.static(\"public\"));\n\n// https://expressjs.com/en/starter/basic-routing.html\napp.get(\"/\", (request, response) => {\n  response.sendFile(__dirname + \"/views/index.html\");\n});\n\n// send the default array of dreams to the webpage\napp.get(\"/dreams\", (request, response) => {\n  // express helps us take JS objects and send them as JSON\n  response.json(dreams);\n});\n\n// get all todos\napp.get('/api/v1/todos', (req, res) => {\n  res.status(200).send({\n    success: 'true',\n    message: 'todos retrieved successfully',\n    todos: db\n  })\n});\n\n// listen for requests :)\nconst listener = app.listen(process.env.PORT, () => {\n  console.log(\"Your app is listening on port \" + listener.address().port);\n});\n"
+      ]
+    },
+    "mtime": 1610036261000
+  },
+  "{\"filename\":\"/app/db/db.js\",\"env\":{},\"retainLines\":false,\"highlightCode\":true,\"suppressDeprecationMessages\":false,\"presets\":[],\"plugins\":[[[],{\"loose\":false,\"spec\":false}],[[],null],[[],null],[[],{\"spec\":false}],[[],null],[[],{\"loose\":false}],[[],null],[[],null],[[],null],[[],{\"loose\":false}],[[],{\"loose\":false}],[[],null],[[],null],[[],null],[[],{\"loose\":false}],[[],null],[[],{\"loose\":false}],[[],null],[[],null],[[],{\"loose\":false}],[[],{\"async\":false,\"asyncGenerators\":false}]],\"ignore\":[],\"code\":true,\"metadata\":true,\"ast\":true,\"comments\":true,\"compact\":\"auto\",\"minified\":false,\"sourceRoot\":\"/app/db\",\"babelrc\":true,\"sourceType\":\"module\",\"moduleIds\":false,\"passPerPreset\":false,\"parserOpts\":false,\"generatorOpts\":false}:6.26.3": {
+    "metadata": {
+      "usedHelpers": [],
+      "marked": [],
+      "modules": {
+        "imports": [],
+        "exports": {
+          "exported": [],
+          "specifiers": []
+        }
+      }
+    },
+    "options": {
+      "filename": "/app/db/db.js",
+      "filenameRelative": "/app/db/db.js",
+      "env": {},
+      "retainLines": false,
+      "highlightCode": true,
+      "suppressDeprecationMessages": false,
+      "presets": [],
+      "plugins": [
+        [
+          [],
+          {
+            "loose": false,
+            "spec": false
+          }
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          {
+            "spec": false
+          }
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          {
+            "loose": false
+          }
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          {
+            "loose": false
+          }
+        ],
+        [
+          [],
+          {
+            "loose": false
+          }
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          {
+            "loose": false
+          }
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          {
+            "loose": false
+          }
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          null
+        ],
+        [
+          [],
+          {
+            "loose": false
+          }
+        ],
+        [
+          [],
+          {
+            "async": false,
+            "asyncGenerators": false
+          }
+        ]
+      ],
+      "ignore": [],
+      "code": true,
+      "metadata": true,
+      "ast": false,
+      "comments": true,
+      "compact": "auto",
+      "minified": false,
+      "sourceMaps": "both",
+      "sourceMapTarget": "db.js",
+      "sourceFileName": "db.js",
+      "sourceRoot": "/app/db",
+      "babelrc": false,
+      "sourceType": "module",
+      "moduleRoot": "/app/db",
+      "moduleIds": false,
+      "passPerPreset": false,
+      "parserOpts": false,
+      "generatorOpts": false,
+      "basename": "db"
+    },
+    "ignored": false,
+    "code": "\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", {\n  value: true\n});\nvar todos = [{\n  id: 1,\n  title: \"lunch\",\n  description: \"Go for lunc by 2pm\"\n}];\n\nexports.default = todos;\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImRiLmpzIl0sIm5hbWVzIjpbInRvZG9zIiwiaWQiLCJ0aXRsZSIsImRlc2NyaXB0aW9uIl0sIm1hcHBpbmdzIjoiOzs7OztBQUFBLElBQU1BLFFBQVMsQ0FDWDtBQUNFQyxNQUFJLENBRE47QUFFRUMsU0FBTyxPQUZUO0FBR0VDLGVBQWE7QUFIZixDQURXLENBQWY7O2tCQVFlSCxLIiwiZmlsZSI6ImRiLmpzIiwic291cmNlUm9vdCI6Ii9hcHAvZGIiLCJzb3VyY2VzQ29udGVudCI6WyJjb25zdCB0b2RvcyA9ICBbXG4gICAge1xuICAgICAgaWQ6IDEsXG4gICAgICB0aXRsZTogXCJsdW5jaFwiLFxuICAgICAgZGVzY3JpcHRpb246IFwiR28gZm9yIGx1bmMgYnkgMnBtXCJcbiAgICB9XG5dO1xuXG5leHBvcnQgZGVmYXVsdCB0b2RvczsiXX0=",
+    "ast": null,
+    "map": {
+      "version": 3,
+      "sources": [
+        "db.js"
+      ],
+      "names": [
+        "todos",
+        "id",
+        "title",
+        "description"
+      ],
+      "mappings": ";;;;;AAAA,IAAMA,QAAS,CACX;AACEC,MAAI,CADN;AAEEC,SAAO,OAFT;AAGEC,eAAa;AAHf,CADW,CAAf;;kBAQeH,K",
+      "file": "db.js",
+      "sourceRoot": "/app/db",
+      "sourcesContent": [
+        "const todos =  [\n    {\n      id: 1,\n      title: \"lunch\",\n      description: \"Go for lunc by 2pm\"\n    }\n];\n\nexport default todos;"
+      ]
+    },
+    "mtime": 1610034206000
+  }
+}
