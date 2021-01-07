@@ -4,10 +4,13 @@
 // we've started you off with Express (https://expressjs.com/)
 // but feel free to use whatever libraries or frameworks you'd like through `package.json`.
 const express = require("express");
-//import todos from '/db/db.js';
-const db = require("./db/db.js");
+const fs = require('fs');
+
+
 const bodyParser = require("body-parser");
 const csv = require('fast-csv');
+const http = require('http');
+
 
 
 const app = express();
@@ -75,17 +78,19 @@ app.post('/csvtojson', (req, res) => {
       }
   }
   
- const todo = {
-   id: db.length + 1,
-   title: req.body.title,
-   description: req.body.description
- }
- db.push(todo);
- return res.status(201).send({
-   success: 'true',
-   message: 'todo added successfully',
-   todo
- })
+
+var download = function(url, dest, cb) {
+  var file = fs.createWriteStream(dest);
+  var request = http.get(url, function(response) {
+    response.pipe(file);
+    file.on('finish', function() {
+      file.close(cb);  // close() is async, call cb after close completes.
+    });
+  }).on('error', function(err) { // Handle errors
+    fs.unlink(dest); // Delete the file async. (But we don't check the result)
+    if (cb) cb(err.message);
+  });
+};
 });
 
 // listen for requests :)
