@@ -59,7 +59,7 @@ app.post('/csvtojson', (req, res) => {
   }
   
   let csvlink = req.body.csv.url;
-  let filepath = 'db/receivedfile.csv';
+  let filepath = 'public/receivedfile.csv';
   
   
  // await fs.createReadStream('public/profilogif.html')
@@ -86,6 +86,7 @@ app.post('/csvtojson', (req, res) => {
 //   };
   
   async function download(url, filePath) {
+//     check protocol
     const proto = !url.charAt(4).localeCompare('s') ? https : http;
 
     return new Promise((resolve, reject) => {
@@ -95,11 +96,6 @@ app.post('/csvtojson', (req, res) => {
       const request = proto.get(url, response => {
         if (response.statusCode !== 200) {
           reject(new Error(`Failed to get '${url}' (${response.statusCode})`));
-            return res.status(400).send({
-                  status: 'failed',
-                  message: 'Error Fetching CSV File',
-                  statusd: downloadStatus
-            });
           return;
         }
 
@@ -107,12 +103,43 @@ app.post('/csvtojson', (req, res) => {
           mime: response.headers['content-type'],
           size: parseInt(response.headers['content-length'], 10),
         };
-
+                    return res.status(400).send({
+                  status: 'failed',
+                  message: 'Error Fetching CSV File',
+                  statusd: fileInfo
+            });
         response.pipe(file);
 
       });
       
-      fs.createReadStream(filepath)
+
+      // The destination stream is ended by the time it's called
+      file.on('finish', () => resolve(fileInfo));
+
+      request.on('error', err => {
+        fs.unlink(filePath, () => reject(err));
+                    return res.status(400).send({
+                  status: 'failed',
+                  message: 'Error Fetching CSV File',
+                  statusd: err
+            });
+      });
+
+      file.on('error', err => {
+        fs.unlink(filePath, () => reject(err));
+                          return res.status(400).send({
+                  status: 'failed',
+                  message: 'Error Fetching CSV File',
+                  statusd: err
+            });
+      });
+
+      request.end();
+    });
+}
+  download(csvlink, filepath);
+  
+        fs.createReadStream(filepath)
       .pipe(parser())
       .on('data', (data) => {
         results.push(data)
@@ -128,22 +155,6 @@ app.post('/csvtojson', (req, res) => {
             message: results
         });
      });
-
-      // The destination stream is ended by the time it's called
-      file.on('finish', () => resolve(fileInfo));
-
-      request.on('error', err => {
-        fs.unlink(filePath, () => reject(err));
-      });
-
-      file.on('error', err => {
-        fs.unlink(filePath, () => reject(err));
-      });
-
-      request.end();
-    });
-}
-  download(csvlink, filepath);
   // let downloadStatus = download(csvlink, filepath);
   
 //   if(downloadStatus == false) {
