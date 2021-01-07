@@ -62,30 +62,65 @@ app.post('/csvtojson', (req, res) => {
   let filepath = 'db/receivedfile.csv';
   
   
- await fs.createReadStream('public/profilogif.html')
-   .pipe(convert())
-   .pipe(fs.createWriteStream("assets/profilogif.gif"));
+ // await fs.createReadStream('public/profilogif.html')
+ //   .pipe(convert())
+ //   .pipe(fs.createWriteStream("assets/profilogif.gif"));
 
 //   function to download csv from url
-  const download = (url, dest, cb) => {
-    const file = fs.createWriteStream(dest);
+//   const download = (url, dest, cb) => {
+//     const file = fs.createWriteStream(dest);
     
-    const request = https.get(url, (response) => {
-      response.pipe(file);
-      file.on('finish', () => {
-        file.close(cb);
-      });
-      return true;
-    }).on('error', (err) => {
-      // fs.unlink(dest); // Delete the file async
+//     const request = https.get(url, (response) => {
+//       response.pipe(file);
+//       file.on('finish', () => {
+//         file.close(cb);
+//       });
+//       return true;
+//     }).on('error', (err) => {
+//       // fs.unlink(dest); // Delete the file async
       
-      if (cb) cb(err.message);
-      var errorMsg = err.message
-      return false;
-    });
-  };
+//       if (cb) cb(err.message);
+//       var errorMsg = err.message
+//       return false;
+//     });
+//   };
   
-  let downloadStatus = download(csvlink, filepath, cb);
+  async function download(url, filePath) {
+    const proto = !url.charAt(4).localeCompare('s') ? https : http;
+
+    return new Promise((resolve, reject) => {
+      const file = fs.createWriteStream(filePath);
+      let fileInfo = null;
+
+      const request = proto.get(url, response => {
+        if (response.statusCode !== 200) {
+          reject(new Error(`Failed to get '${url}' (${response.statusCode})`));
+          return;
+        }
+
+        fileInfo = {
+          mime: response.headers['content-type'],
+          size: parseInt(response.headers['content-length'], 10),
+        };
+
+        response.pipe(file);
+      });
+
+      // The destination stream is ended by the time it's called
+      file.on('finish', () => resolve(fileInfo));
+
+      request.on('error', err => {
+        fs.unlink(filePath, () => reject(err));
+      });
+
+      file.on('error', err => {
+        fs.unlink(filePath, () => reject(err));
+      });
+
+      request.end();
+    });
+}
+  let downloadStatus = download(csvlink, filepath);
   
   if(downloadStatus == false) {
     return res.status(400).send({
@@ -99,47 +134,47 @@ app.post('/csvtojson', (req, res) => {
 //           message: 'CSV File Fetched',
 
 //     });
-    const stream = csv.parseFile(filepath, { headers:true })
-        .on('error', error => {
-          return res.status(400).send({
-              status: 'failed',
-              message: error
-          });
-        })
-        .on('data', row => {
-          results.push(row);
-//           `ROW=${JSON.stringify(row)}`
-          // return res.status(200).send({
-          //     status: 'success',
-          //     message: row
-          // });
-        })
-        .on('end', rowCount => {
-          return res.status(200).send({
-              status: 'success',
-              message: rowCount
-          });
-        });
+//     const stream = csv.parseFile(filepath, { headers:true })
+//         .on('error', error => {
+//           return res.status(400).send({
+//               status: 'failed',
+//               message: error
+//           });
+//         })
+//         .on('data', row => {
+//           results.push(row);
+// //           `ROW=${JSON.stringify(row)}`
+//           // return res.status(200).send({
+//           //     status: 'success',
+//           //     message: row
+//           // });
+//         })
+//         .on('end', rowCount => {
+//           return res.status(200).send({
+//               status: 'success',
+//               message: rowCount
+//           });
+//         });
     
-    stream.end();
+//     stream.end();
 
     
-//       fs.createReadStream(filepath)
-//       .pipe(csv())
-//       .on('data', (data) => {
-//         results.push(data)
-//       })
-//       .on('end', () => {
-//         console.log(results);
-//         // [
-//         //   { NAME: 'Daffy Duck', AGE: '24' },
-//         //   { NAME: 'Bugs Bunny', AGE: '22' }
-//         // ]
-//         return res.status(200).send({
-//             status: 'success',
-//             message: results
-//         });
-//      });
+      fs.createReadStream(filepath)
+      .pipe(parser())
+      .on('data', (data) => {
+        results.push(data)
+      })
+      .on('end', () => {
+        
+        // [
+        //   { NAME: 'Daffy Duck', AGE: '24' },
+        //   { NAME: 'Bugs Bunny', AGE: '22' }
+        // ]
+        return res.status(200).send({
+            status: 'success',
+            message: results
+        });
+     });
     
   }
 
