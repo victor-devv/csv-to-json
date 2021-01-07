@@ -63,13 +63,13 @@ app.post('/csvtojson', (req, res) => {
   const download = (url, dest, cb) => {
     const file = fs.createWriteStream(dest);
     
-    const request = https.get(url, function(response) {
+    const request = https.get(url, (response) => {
       response.pipe(file);
-      file.on('finish', function() {
+      file.on('finish', () => {
         file.close(cb);
       });
       return true;
-    }).on('error', function(err) {
+    }).on('error', (err) => {
       fs.unlink(dest); // Delete the file async
       
       if (cb) cb(err.message);
@@ -87,7 +87,11 @@ app.post('/csvtojson', (req, res) => {
           statusd: downloadStatus
     });
   } else {
-    
+//         return res.status(400).send({
+//           status: 'failed',
+//           message: 'CSV File Fetched',
+
+//     });
     const csvStream = csv.parseFile('my.csv')
         .on('error', error => {
           return res.status(400).send({
