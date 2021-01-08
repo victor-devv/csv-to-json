@@ -126,31 +126,30 @@ app.post('/csvtojson', async (req, res) => {
       message: "Unable to parse csv file"
     });
   })
-      .on("end", (rowsCount) => {
-      logger.info(`Converted ${rowsCount} rows to JSON`);
-      res.status(200).send({
-        conversion_key: uuid4(),
-        status: "success",
-        json: responseData,
-        timestamp: new Date(),
-      });
+  .on("end", (rowsCount) => {
+    logger.info(`Converted ${rowsCount} rows to JSON`);
+    return res.status(200).send({
+      conversion_key: uuid4(),
+      json: response,
     });
+  });
 
-  stream.write(csvRequest.data);
+  stream.write(csvReq.data);
   stream.end();
   
+});
 //   file close callback
-  const cb = (err = null) => { 
-    if (err) {
-     return res.status(400).send({
-          status: 'failed',
-          message: 'Error Closing CSV File.'
-      });
-    }
-  }
+//   const cb = (err = null) => { 
+//     if (err) {
+//      return res.status(400).send({
+//           status: 'failed',
+//           message: 'Error Closing CSV File.'
+//       });
+//     }
+//   }
   
-  let csvlink = req.body.csv.url;
-  let filepath = '/receivedfile.csv';
+//   let csvlink = req.body.csv.url;
+//   let filepath = '/receivedfile.csv';
   
   
  // await fs.createReadStream('public/profilogif.html')
@@ -176,78 +175,78 @@ app.post('/csvtojson', async (req, res) => {
 //     });
 //   };
   
-  async function download(url, filePath) {
+  // async function download(url, filePath) {
 //     check protocol
-    const proto = !url.charAt(4).localeCompare('s') ? https : http;
+//     const proto = !url.charAt(4).localeCompare('s') ? https : http;
 
-    return new Promise((resolve, reject) => {
+//     return new Promise((resolve, reject) => {
       
-      const file = fs.createWriteStream(filePath);
-      // The destination stream is ended by the time it's called
-      file.on('finish', () => resolve(fileInfo));
-      file.on('error', err => {
-        fs.unlink(filePath, () => reject(err));
-            return res.status(400).send({
-                  status: 'failed',
-                  message: 'Error Writing CSV File',
-                  statusd: err
-            });
-      });
+//       const file = fs.createWriteStream(filePath);
+//       // The destination stream is ended by the time it's called
+//       file.on('finish', () => resolve(fileInfo));
+//       file.on('error', err => {
+//         fs.unlink(filePath, () => reject(err));
+//             return res.status(400).send({
+//                   status: 'failed',
+//                   message: 'Error Writing CSV File',
+//                   statusd: err
+//             });
+//       });
       
-      let fileInfo = null;
+//       let fileInfo = null;
 
-      const request = proto.get(url, response => {
-        if (response.statusCode !== 200) {
-          reject(new Error(`Failed to get '${url}' (${response.statusCode})`));
-          return;
-        }
-            // return res.status(400).send({
-            //       status: 'failed',
-            //       message: 'Response',
-            //       statusd: response
-            // });
-        fileInfo = {
-          mime: response.headers['content-type'],
-          size: parseInt(response.headers['content-length'], 10),
-        };
+//       const request = proto.get(url, response => {
+//         if (response.statusCode !== 200) {
+//           reject(new Error(`Failed to get '${url}' (${response.statusCode})`));
+//           return;
+//         }
+//             // return res.status(400).send({
+//             //       status: 'failed',
+//             //       message: 'Response',
+//             //       statusd: response
+//             // });
+//         fileInfo = {
+//           mime: response.headers['content-type'],
+//           size: parseInt(response.headers['content-length'], 10),
+//         };
 
-        response.pipe(file);
+//         response.pipe(file);
 
-      });
+//       });
       
 
-      request.on('error', err => {
-        fs.unlink(filePath, () => reject(err));
-                    return res.status(400).send({
-                  status: 'failed',
-                  message: 'Error Fetching CSV File',
-                  statusd: err
-            });
-      });
+//       request.on('error', err => {
+//         fs.unlink(filePath, () => reject(err));
+//                     return res.status(400).send({
+//                   status: 'failed',
+//                   message: 'Error Fetching CSV File',
+//                   statusd: err
+//             });
+//       });
+//
+//
 
-
-
-      request.end();
-    });
-}
-  download(csvlink, filepath);
+//       request.end();
+//     });
+// }
+//   download(csvlink, filepath);
   
-        fs.createReadStream(filepath)
-      .pipe(parser())
-      .on('data', (data) => {
-        results.push(data)
-      })
-      .on('end', () => {
+//         fs.createReadStream(filepath)
+//       .pipe(parser())
+//       .on('data', (data) => {
+//         results.push(data)
+//       })
+//       .on('end', () => {
         
-        // [
-        //   { NAME: 'Daffy Duck', AGE: '24' },
-        //   { NAME: 'Bugs Bunny', AGE: '22' }
-        // ]
-        return res.status(200).send({
-            status: 'success',
-            message: results
-        });
-     });
+//         // [
+//         //   { NAME: 'Daffy Duck', AGE: '24' },
+//         //   { NAME: 'Bugs Bunny', AGE: '22' }
+//         // ]
+//         return res.status(200).send({
+//             status: 'success',
+//             message: results
+//         });
+//      });
   // let downloadStatus = download(csvlink, filepath);
   
 //   if(downloadStatus == false) {
@@ -307,7 +306,7 @@ app.post('/csvtojson', async (req, res) => {
     
 // }
 
-});
+
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT, () => {
