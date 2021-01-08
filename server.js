@@ -44,7 +44,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 //filter elements in select_field
-const selected = (object, keys) => keys.reduce((a, b) => ((a[b] = object[b]), a), {});
+const selectedFields = (object, keys) => keys.reduce((a, b) => ((a[b] = object[b]), a), {});
 
 app.post('/csvtojson', async (req, res) => {
   const requestData = req.body;
@@ -100,13 +100,13 @@ app.post('/csvtojson', async (req, res) => {
     if (!select_fields) {
       response.push(row);
     } else {
-      response.push(selected(row, select_fields));
+      response.push(selectedFields(row, select_fields));
     }
   })
   .on("error", () => {
     return res.status(500).send({
       status: "failed",
-      message: "Unable to parse csv file"
+      message: "Unable to parse CSV file"
     });
   })
   .on("end", (rowsCount) => {

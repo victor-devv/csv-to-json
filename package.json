@@ -2,9 +2,9 @@
   "//1": "describes your app and its dependencies",
   "//2": "https://docs.npmjs.com/files/package.json",
   "//3": "updating this file will download and update your packages",
-  "name": "hello-express",
+  "name": "csv-to-json-converter",
   "version": "0.0.1",
-  "description": "A simple Node app built on Express, instantly up and running.",
+  "description": "A simple Express REST API that accepts a payload containing a URL to a csv and returns a JSON array based on the selected fields in the request payload.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js | pino-pretty",
@@ -40,4 +40,5 @@
     "glitch",
     "express"
   ]
+
 }
