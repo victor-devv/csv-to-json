@@ -65,19 +65,19 @@ app.get("/", (request, response) => {
 
 app.post('/csvtojson', async (req, res) => {
   const requestData = req.body;
-  let responseData = [];
+  let response = [];
   
   if(!requestData.csv) {
     return res.status(400).send({
       status: 'failed',
-      message: 'Invalid Payload Structure'
+      message: 'Invalid Payload Structure. Required Field `csv` Missing'
     });
   }
   
   if(!requestData.csv.url) {
     return res.status(400).send({
       status: 'failed',
-      message: 'Missing CSV Link'
+      message: "Invalid Payload Structure. Required Field `csv['url']` Missing"
     });
   }
   
@@ -87,10 +87,57 @@ app.post('/csvtojson', async (req, res) => {
       if(!checkSelectFields) {
         return res.status(400).send({
           status: 'failed',
-          message: 'Invalid Data Type for select_fields'
+          message: "Invalid Data Type for `csv['select_fields']`"
         });
       }
   }
+  
+  const {
+    csv: { url, select_fields, length },
+  } = requestData;
+
+  const csvReq = await axios.get(url);
+  
+  //validate csv file
+  if (csvReq.headers["content-disposition"].split(".").pop() !== 'csv"') {
+    return res.status(400).send({
+      status: "failed",
+      message: "Url does not contain a valid CSV file",
+    });
+  }
+  
+//   Else parse file
+  const stream = parse({
+    headers: true,
+    ignoreEmpty: true,
+    trim: true,
+    maxRows: length ? length : 0,
+  })
+  .on("data", (row) => {
+    if (!select_fields) {
+      response.push(row);
+    } else {
+      response.push(selected(row, select_fields));
+    }
+  })
+  .on("error", () => {
+    return res.status(500).send({
+      status: "failed",
+      message: "Unable to parse csv file"
+    });
+  })
+      .on("end", (rowsCount) => {
+      logger.info(`Converted ${rowsCount} rows to JSON`);
+      res.status(200).send({
+        conversion_key: uuid4(),
+        status: "success",
+        json: responseData,
+        timestamp: new Date(),
+      });
+    });
+
+  stream.write(csvRequest.data);
+  stream.end();
   
 //   file close callback
   const cb = (err = null) => { 
