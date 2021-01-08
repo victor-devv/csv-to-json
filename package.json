@@ -8,8 +8,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js | pino-pretty",
-    "serve": "nodemon server.js",
-    
+    "serve": "nodemon server.js"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
@@ -40,6 +39,5 @@
     "node",
     "glitch",
     "express"
-  ],
-
+  ]
 }

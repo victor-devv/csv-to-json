@@ -1,19 +1,57 @@
 // server.js
-const http = require('http');
-const https = require('https');
+//const http = require('http');
+//const https = require('https');
 const fs = require('fs');
 const express = require("express");
 
-const bodyParser = require("body-parser");
-const csv = require('fast-csv');
-const parser = require('csv-parser');
+//const bodyParser = require("body-parser");
+//const csv = require('fast-csv');
+//const parser = require('csv-parser');
+const axios = require("axios");
+const { v4: uuid4 } = require("uuid");
+const { parse } = require("fast-csv");
+const pino = require("pino");
+const expressPino = require("express-pino-logger");
+const logger = pino({ level: process.env.LOG_LEVEL || "info" });
+const expressLogger = expressPino({ logger });
 
+const { RateLimiterMemory } = require("rate-limiter-flexible");
+const rateLimiter = new RateLimiterMemory({
+  points: 10,
+  duration: 1,
+  blockDuration: 300,
+});
 const app = express();
 
 const results = ['a', 'b'];
-// Parse incoming requests data
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+
+// limit incoming requests
+app.use((req, res, next) => {
+  rateLimiter
+    .consume(req.socket.remoteAddress)
+    .then(() => {
+      next();
+    })
+    .catch((err) => {
+      res.status(429).send({ status: "error", message: "Too many requests" });
+    });
+});
+
+//CORS config
+app.use(require("cors")());
+
+//console logging
+app.use(expressLogger);
+
+//parse incoming requests
+app.use(express.json());
+
+//filter elements in select_field
+const selected = (object, keys) => keys.reduce((a, b) => ((a[b] = object[b]), a), {});
+
+// // Parse incoming requests data
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 // make all the files in 'public' available
 // https://expressjs.com/en/starter/static-files.html
@@ -25,19 +63,25 @@ app.get("/", (request, response) => {
 });
 
 
-app.post('/csvtojson', (req, res) => {
+app.post('/csvtojson', async (req, res) => {
+  const requestData = req.body;
+  let responseData = [];
   
-  if(!req.body.csv) {
+  if(!requestData.csv) {
     return res.status(400).send({
       status: 'failed',
       message: 'Invalid Payload Structure'
     });
-  } else if(!req.body.csv.url) {
+  }
+  
+  if(!requestData.csv.url) {
     return res.status(400).send({
       status: 'failed',
       message: 'Missing CSV Link'
     });
-  } else if(req.body.csv.select_fields) {
+  }
+  
+  if(requestData.csv.select_fields) {
       let checkSelectFields = Array.isArray(req.body.csv.select_fields);
     
       if(!checkSelectFields) {
